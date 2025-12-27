@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MC Monitor | Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #0f172a; color: white; font-family: 'Inter', sans-serif; height: 100vh; display: flex; align-items: center; }
+        .hero-box { background: #1e293b; padding: 40px; border-radius: 24px; border: 1px solid #334155; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .server-card { background: #334155; border: none; transition: 0.2s; cursor: pointer; }
+        .server-card:hover { background: #475569; transform: translateY(-5px); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 hero-box text-center">
+                <h1 class="display-4 fw-bold mb-4">Minecraft <span class="text-primary">Monitor</span></h1>
+                
+                <form action="/monitor" method="get" class="mb-5">
+                    <div class="input-group input-group-lg">
+                        <input type="text" name="ip" class="form-control bg-dark text-white border-secondary" placeholder="Enter Server IP (e.g. play.mineplex.com)">
+                        <button class="btn btn-primary px-4" type="submit">Start Monitoring</button>
+                    </div>
+                </form>
+
+                <h5 class="text-muted mb-4">OR CHOOSE A FEATURED SERVER</h5>
+                
+                <div class="row g-3">
+                    {% for server in featured %}
+                    <div class="col-md-6">
+                        <a href="/monitor?ip={{ server.ip }}" class="text-decoration-none">
+                            <div class="card server-card text-white p-3 h-100">
+                                <h6 class="mb-1 text-info">{{ server.name }}</h6>
+                                <p class="small mb-0 text-muted">{{ server.ip }}</p>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
