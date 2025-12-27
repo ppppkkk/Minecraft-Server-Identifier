@@ -1,37 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>MC Monitor | Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background: #0f172a; color: white; font-family: 'Inter', sans-serif; height: 100vh; display: flex; align-items: center; }
-        .hero-box { background: #1e293b; padding: 40px; border-radius: 24px; border: 1px solid #334155; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .server-card { background: #334155; border: none; transition: 0.2s; cursor: pointer; }
-        .server-card:hover { background: #475569; transform: translateY(-5px); }
+        body { 
+            background: #0f172a; 
+            color: white; 
+            font-family: 'Inter', sans-serif; 
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+        }
+
+        .hero-box { 
+            background: #1e293b; 
+            padding: 50px; 
+            border-radius: 24px; 
+            border: 2px solid #334155; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6); 
+        }
+
+        /* Neon Logo Style */
+        .logo-text { 
+            font-weight: 900; 
+            letter-spacing: -1px; 
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.4); 
+        }
+
+        /* High Visibility Input */
+        .form-control { 
+            background: #000 !important; 
+            color: #adff2f !important; 
+            border: 2px solid #334155 !important; 
+            font-family: 'Courier New', monospace; 
+            font-weight: bold; 
+        }
+        .form-control:focus { 
+            border-color: #38bdf8 !important; 
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); 
+        }
+
+        /* Server Cards with Hover Glow */
+        .server-card { 
+            background: #1e293b; 
+            border: 2px solid #334155; 
+            transition: all 0.3s ease; 
+            cursor: pointer; 
+            text-align: left;
+        }
+        .server-card:hover { 
+            background: #334155; 
+            border-color: #adff2f; 
+            transform: translateY(-5px); 
+            box-shadow: 0 5px 20px rgba(173, 255, 47, 0.2); 
+        }
+
+        .server-name { color: #adff2f; font-weight: 800; font-size: 1.1rem; }
+        .server-ip { color: #94a3b8; font-family: 'Courier New', monospace; font-size: 0.85rem; }
+        .featured-label { font-size: 0.8rem; color: #fb923c; font-weight: 800; letter-spacing: 2px; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8 hero-box text-center">
-                <h1 class="display-4 fw-bold mb-4">Minecraft <span class="text-primary">Monitor</span></h1>
+            <div class="col-md-9 hero-box text-center">
+                <h1 class="display-3 logo-text mb-2">MC <span class="text-info">MONITOR</span></h1>
+                <p class="text-muted mb-5">Professional Real-Time Telemetry Dashboard</p>
                 
                 <form action="/monitor" method="get" class="mb-5">
                     <div class="input-group input-group-lg">
-                        <input type="text" name="ip" class="form-control bg-dark text-white border-secondary" placeholder="Enter Server IP (e.g. play.mineplex.com)">
-                        <button class="btn btn-primary px-4" type="submit">Start Monitoring</button>
+                        <input type="text" name="ip" class="form-control" placeholder="enter.server.ip" required>
+                        <button class="btn btn-info px-5 fw-bold" type="submit">START MONITOR</button>
                     </div>
                 </form>
 
-                <h5 class="text-muted mb-4">OR CHOOSE A FEATURED SERVER</h5>
+                <div class="featured-label mb-3">FEATURED NETWORKS</div>
                 
                 <div class="row g-3">
                     {% for server in featured %}
                     <div class="col-md-6">
                         <a href="/monitor?ip={{ server.ip }}" class="text-decoration-none">
-                            <div class="card server-card text-white p-3 h-100">
-                                <h6 class="mb-1 text-info">{{ server.name }}</h6>
-                                <p class="small mb-0 text-muted">{{ server.ip }}</p>
+                            <div class="card server-card p-3 h-100">
+                                <div class="server-name">{{ server.name }}</div>
+                                <div class="server-ip">{{ server.ip }}</div>
+                                <div class="small text-muted mt-1">{{ server.desc }}</div>
                             </div>
                         </a>
                     </div>
