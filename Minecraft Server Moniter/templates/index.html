@@ -10,12 +10,21 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@2.0.0/dist/chartjs-plugin-streaming.min.js"></script>
     <style>
         body { background: #0f172a; color: white; font-family: 'Inter', sans-serif; }
-        .card { background: #1e293b; border: 1px solid #334155; border-radius: 15px; }
-        .stat-value { font-size: 2.5rem; font-weight: bold; color: #38bdf8; }
+        
+        /* High Contrast Stat Cards */
+        .card { background: #1e293b; border: 2px solid #334155; border-radius: 15px; }
+        .stat-label { font-size: 0.9rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* Updated Colors for Visibility */
+        .ping-value { font-size: 3.5rem; font-weight: 900; color: #adff2f; text-shadow: 0 0 20px rgba(173, 255, 47, 0.3); }
+        .player-value { font-size: 3.5rem; font-weight: 900; color: #fb923c; text-shadow: 0 0 20px rgba(251, 146, 60, 0.3); }
+        
+        /* Terminal Styling */
         #console-log { background: #000; color: #10b981; font-family: 'Courier New', monospace; font-size: 0.85rem; height: 180px; overflow-y: auto; border-radius: 0 0 10px 10px; border: 1px solid #334155; border-top: none; }
         .terminal-header { background: #334155; padding: 8px 15px; border-radius: 10px 10px 0 0; font-size: 0.8rem; color: #cbd5e1; border: 1px solid #334155; }
-        .btn-clear { font-size: 0.7rem; padding: 2px 8px; color: #94a3b8; border: 1px solid #475569; background: transparent; transition: 0.2s; }
-        .btn-clear:hover { background: #ef4444; color: white; border-color: #ef4444; }
+        
+        .btn-clear { font-size: 0.7rem; padding: 2px 8px; color: #cbd5e1; border: 1px solid #475569; background: transparent; }
+        .btn-clear:hover { background: #ef4444; color: white; }
     </style>
 </head>
 <body>
@@ -25,18 +34,18 @@
         <h2 class="mb-4 text-center">Monitoring: <span class="text-info">{{ ip }}</span></h2>
 
         <div class="row g-4 mb-4">
-            <div class="col-md-6">
-                <div class="card p-4 text-center">
-                    <h6>CURRENT LATENCY</h6>
-                    <div id="ping-text" class="stat-value">--</div>
-                    <small class="text-muted">ms (millisecond delay)</small>
+            <div class="col-md-6 text-center">
+                <div class="card p-4">
+                    <div class="stat-label">Current Latency</div>
+                    <div id="ping-text" class="ping-value">--</div>
+                    <div class="text-muted">ms delay</div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card p-4 text-center">
-                    <h6>LIVE PLAYERS</h6>
-                    <div id="player-text" class="stat-value">--</div>
-                    <small class="text-muted">concurrent users</small>
+            <div class="col-md-6 text-center">
+                <div class="card p-4">
+                    <div class="stat-label">Current Players</div>
+                    <div id="player-text" class="player-value">--</div>
+                    <div class="text-muted">active online</div>
                 </div>
             </div>
         </div>
@@ -50,7 +59,7 @@
             <button class="btn btn-clear" onclick="clearConsole()">CLEAR LOG</button>
         </div>
         <div id="console-log" class="p-3">
-            <div>> Handshake initiated. Monitoring thread attached...</div>
+            <div>> Handshake initiated...</div>
         </div>
     </div>
 
@@ -64,18 +73,18 @@
                 datasets: [
                     {
                         label: 'Ping (ms)',
-                        borderColor: '#38bdf8',
-                        backgroundColor: 'rgba(56, 189, 248, 0.1)',
-                        borderWidth: 2,
+                        borderColor: '#adff2f',
+                        backgroundColor: 'rgba(173, 255, 47, 0.1)',
+                        borderWidth: 3,
                         tension: 0.3,
                         data: [],
                         yAxisID: 'y'
                     },
                     {
                         label: 'Players',
-                        borderColor: '#fbbf24',
-                        backgroundColor: 'rgba(251, 191, 36, 0.1)',
-                        borderWidth: 2,
+                        borderColor: '#fb923c',
+                        backgroundColor: 'rgba(251, 146, 60, 0.1)',
+                        borderWidth: 3,
                         tension: 0.3,
                         data: [],
                         yAxisID: 'y1'
@@ -84,11 +93,10 @@
             },
             options: {
                 responsive: true,
-                interaction: { intersect: false, mode: 'index' },
                 scales: {
                     x: { type: 'realtime', realtime: { delay: 2000, duration: 20000 } },
-                    y: { type: 'linear', position: 'left', title: { display: true, text: 'Latency (ms)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                    y1: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Player Count' } }
+                    y: { type: 'linear', position: 'left', title: { display: true, text: 'Latency (ms)', color: '#adff2f' } },
+                    y1: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Player Count', color: '#fb923c' } }
                 }
             }
         });
@@ -107,30 +115,22 @@
                     const entry = document.createElement('div');
                     
                     if (data.status === "Online") {
-                        entry.innerHTML = `[${time}] <span style="color: #38bdf8">SUCCESS:</span> Received packet (Ping: ${data.mc_ping}ms | Pop: ${data.players})`;
+                        entry.innerHTML = `[${time}] <span style="color: #adff2f">SUCCESS:</span> Latency ${data.mc_ping}ms | Players ${data.players}`;
                     } else {
-                        entry.innerHTML = `[${time}] <span style="color: #f87171">TIMEOUT:</span> Server did not respond. Check status.`;
+                        entry.innerHTML = `[${time}] <span style="color: #f87171">TIMEOUT:</span> Server connection failed.`;
                     }
 
                     consoleLog.appendChild(entry);
-                    
-                    // Auto-scroll logic
                     consoleLog.scrollTop = consoleLog.scrollHeight;
 
-                    // Keep console from using too much memory
-                    while (consoleLog.childNodes.length > 30) {
+                    while (consoleLog.childNodes.length > 25) {
                         consoleLog.removeChild(consoleLog.firstChild);
                     }
-                })
-                .catch(err => {
-                    const errorEntry = document.createElement('div');
-                    errorEntry.innerHTML = `<span style="color: #f87171">> CONNECTION ERROR: Local Flask server is down.</span>`;
-                    consoleLog.appendChild(errorEntry);
                 });
         }
 
         function clearConsole() {
-            consoleLog.innerHTML = '<div>> Console cleared by user.</div>';
+            consoleLog.innerHTML = '<div>> Console cleared.</div>';
         }
 
         setInterval(updateData, 3000);
